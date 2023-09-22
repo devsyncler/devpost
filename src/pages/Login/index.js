@@ -1,5 +1,5 @@
 import React, { useState, useContext }  from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 
 import { Container, Title, Input, Button, ButtonText, SignUpButton, SignUpText} from './styles';
 
@@ -11,7 +11,7 @@ function Login(){
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { signUp } = useContext(AuthContext);
+  const { signUp, signIn, loadingAuth } = useContext(AuthContext);
 
 
   function toggleLogin(){
@@ -21,13 +21,13 @@ function Login(){
     setPassword('')
   }
 
-  function handleSignIn(){
+  async function handleSignIn(){
     if(email === '' || password === ''){
       console.log("PREENCHA TODOS OS CAMPOS")
       return;
     }
 
-    // Fazer o login do user
+    await signIn(email, password)
 
   }
 
@@ -63,7 +63,11 @@ function Login(){
         />
   
         <Button onPress={handleSignIn}>
-          <ButtonText>Acessar</ButtonText>
+          {loadingAuth ? (
+            <ActivityIndicator size={20} color="#FFF" />
+          ) : (
+            <ButtonText>Acessar</ButtonText>
+          )}
         </Button>
   
         <SignUpButton onPress={toggleLogin}>
@@ -99,7 +103,11 @@ function Login(){
       />
 
       <Button onPress={handleSignUp}>
-        <ButtonText>Cadastrar</ButtonText>
+         {loadingAuth ? (
+            <ActivityIndicator size={20} color="#FFF" />
+          ) : (
+            <ButtonText>Cadastrar</ButtonText>
+          )}
       </Button>
 
       <SignUpButton onPress={toggleLogin}>
